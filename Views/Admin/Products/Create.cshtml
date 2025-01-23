@@ -1,0 +1,123 @@
+@model Product
+@{
+    ViewData["Title"] = "Yeni Ürün Ekle";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title mb-4">Yeni Ürün Ekle</h4>
+
+            <form asp-action="Create" method="post">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">Ürün Adı</label>
+                            <input asp-for="Name" class="form-control">
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label">Açıklama</label>
+                            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Price" class="form-label">Fiyat</label>
+                            <input asp-for="Price" type="number" step="0.01" class="form-control">
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="CategoryId" class="form-label">Kategori</label>
+                            <select asp-for="CategoryId" class="form-select">
+                                <option value="">-- Kategori Seçin --</option>
+                                @if (ViewBag.Categories != null)
+                                {
+                                    foreach (var category in ViewBag.Categories)
+                                    {
+                                        <option value="@category.Id">@category.Name</option>
+                                    }
+                                }
+                            </select>
+                            <span asp-validation-for="CategoryId" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="ImageUrl" class="form-label">Görsel URL</label>
+                            <input asp-for="ImageUrl" class="form-control" 
+                                   placeholder="https://example.com/image.jpg">
+                            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                            <div class="mt-2" id="imagePreview" style="display:none;">
+                                <img src="" alt="Önizleme" style="max-width: 200px; max-height: 200px;">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input asp-for="IsActive" class="form-check-input" checked>
+                                <label asp-for="IsActive" class="form-check-label">Aktif</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-end">
+                    <a href="@Url.Action("Index")" class="btn btn-light">İptal</a>
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('form').submit(function(e) {
+                var isValid = true;
+                
+                if ($('#Name').val() === '') {
+                    $('#Name').addClass('is-invalid');
+                    isValid = false;
+                }
+
+                if ($('#Price').val() === '' || $('#Price').val() <= 0) {
+                    $('#Price').addClass('is-invalid');
+                    isValid = false;
+                }
+
+                if ($('#CategoryId').val() === '') {
+                    $('#CategoryId').addClass('is-invalid');
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Lütfen zorunlu alanları doldurun.');
+                }
+            });
+
+            $('input, select').change(function() {
+                $(this).removeClass('is-invalid');
+            });
+
+            $('#ImageUrl').on('change input', function() {
+                var url = $(this).val();
+                var preview = $('#imagePreview');
+                var img = preview.find('img');
+                
+                if (url) {
+                    img.attr('src', url);
+                    preview.show();
+                    
+                    img.on('error', function() {
+                        preview.hide();
+                        alert('Görsel yüklenemedi. Lütfen geçerli bir URL giriniz.');
+                    });
+                } else {
+                    preview.hide();
+                }
+            });
+        });
+    </script>
+} 

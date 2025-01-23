@@ -1,0 +1,41 @@
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Admin Panel";
+}
+
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="mb-4">Hoş Geldiniz</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">Ürünler</h5>
+                            <p class="card-text display-4">@ViewBag.ProductCount</p>
+                            <a href="/Admin/Products" class="btn btn-light">Ürünleri Yönet</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card bg-success text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">Kategoriler</h5>
+                            <p class="card-text display-4">@ViewBag.CategoryCount</p>
+                            <a href="/Admin/Categories" class="btn btn-light">Kategorileri Yönet</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card bg-info text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">Siparişler</h5>
+                            <p class="card-text display-4">@ViewBag.OrderCount</p>
+                            <a href="/Admin/Orders" class="btn btn-light">Siparişleri Yönet</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

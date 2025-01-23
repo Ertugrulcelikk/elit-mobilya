@@ -1,0 +1,123 @@
+@model List<CartItem>
+@{
+    ViewData["Title"] = "Sepetim - Elit Mobilya";
+}
+
+<div class="container py-5">
+    <h1 class="display-4 text-center mb-5">Sepetim</h1>
+
+    @if (Model.Any())
+    {
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        @foreach (var item in Model)
+                        {
+                            <div class="cart-item mb-3 pb-3 border-bottom" data-id="@item.Id">
+                                <div class="row align-items-center">
+                                    <div class="col-md-2">
+                                        <img src="@(item.Product?.ImageUrl ?? "")" class="img-fluid rounded" alt="@(item.Product?.Name ?? "")">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h5>@(item.Product?.Name ?? "")</h5>
+                                        <p class="text-muted mb-0">@(item.Product?.Category?.Name ?? "")</p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="text-primary">@(item.Product?.Price.ToString("N2") ?? "0.00") TL</span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="input-group">
+                                            <button class="btn btn-outline-secondary btn-sm quantity-decrease">-</button>
+                                            <input type="number" class="form-control form-control-sm text-center quantity-input" 
+                                                   value="@item.Quantity" min="1">
+                                            <button class="btn btn-outline-secondary btn-sm quantity-increase">+</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 text-end">
+                                        <button class="btn btn-danger btn-sm remove-item">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">Sipariş Özeti</h5>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Ara Toplam</span>
+                            <span class="subtotal">@Model.Sum(i => i.Product.Price * i.Quantity).ToString("N2") TL</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>KDV (%18)</span>
+                            <span class="tax">@(Model.Sum(i => i.Product.Price * i.Quantity * 0.18M).ToString("N2")) TL</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-4">
+                            <strong>Toplam</strong>
+                            <strong class="total">@(Model.Sum(i => i.Product.Price * i.Quantity * 1.18M).ToString("N2")) TL</strong>
+                        </div>
+                        <button class="btn btn-primary w-100">Siparişi Tamamla</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-center">
+            <div class="mb-4">
+                <i class="fas fa-shopping-cart fa-4x text-muted"></i>
+            </div>
+            <h3>Sepetiniz Boş</h3>
+            <p class="text-muted">Sepetinizde henüz ürün bulunmamaktadır.</p>
+            <a href="@Url.Action("TumUrunler", "Home")" class="btn btn-primary">
+                Alışverişe Başla
+            </a>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('.quantity-decrease').click(function() {
+                var input = $(this).closest('.input-group').find('.quantity-input');
+                var value = parseInt(input.val());
+                if (value > 1) {
+                    input.val(value - 1).change();
+                }
+            });
+
+            $('.quantity-increase').click(function() {
+                var input = $(this).closest('.input-group').find('.quantity-input');
+                var value = parseInt(input.val());
+                input.val(value + 1).change();
+            });
+
+            $('.quantity-input').change(function() {
+                var cartItemId = $(this).closest('.cart-item').data('id');
+                var quantity = $(this).val();
+
+                $.post('/Cart/UpdateQuantity', { id: cartItemId, quantity: quantity }, function() {
+                    location.reload();
+                });
+            });
+
+-            $('.remove-item').click(function() {
+                var cartItemId = $(this).closest('.cart-item').data('id');
+
+                if (confirm('Bu ürünü sepetten kaldırmak istediğinizden emin misiniz?')) {
+                    $.post('/Cart/RemoveFromCart', { id: cartItemId }, function() {
+                        location.reload();
+                    });
+                }
+            });
+        });
+    </script>
+} 

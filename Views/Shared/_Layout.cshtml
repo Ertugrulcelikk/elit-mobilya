@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Elit Mobilya</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom fixed-top">
+            <div class="container">
+                <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-couch text-primary"></i> Elit Mobilya
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">Anasayfa</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Kategoriler</a>
+                            <ul class="dropdown-menu">
+                                @await Component.InvokeAsync("CategoryMenu")
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Hakkimizda">Hakkımızda</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Iletisim">İletişim</a>
+                        </li>
+                        <li class="nav-item ms-2">
+                            <a class="btn btn-outline-primary" href="/Admin/Login">
+                                <i class="fas fa-user-shield"></i> Admin Girişi
+                            </a>
+                        </li>
+                        <li class="nav-item ms-2">
+                            <a class="btn btn-primary" href="@Url.Action("Index", "Cart")">
+                                <i class="fas fa-shopping-cart"></i> Sepetim
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="main-content">
+        @RenderBody()
+    </div>
+
+    <footer class="bg-dark text-light py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5 class="mb-3">Elit Mobilya & Dekorasyon</h5>
+                    <p>Kaliteli ve şık mobilyalarla yaşam alanlarınızı güzelleştiriyoruz.</p>
+                    <div class="social-links">
+                        <a href="#" class="text-light me-3"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-light me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-light me-3"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5 class="mb-3">Hızlı Linkler</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-light text-decoration-none mb-2 d-block">Hakkımızda</a></li>
+                        <li><a href="#" class="text-light text-decoration-none mb-2 d-block">Ürünlerimiz</a></li>
+                        <li><a href="#" class="text-light text-decoration-none mb-2 d-block">İletişim</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5 class="mb-3">İletişim</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i> Adres: İstanbul, Türkiye</li>
+                        <li class="mb-2"><i class="fas fa-phone me-2"></i> Tel: (0212) 123 45 67</li>
+                        <li class="mb-2"><i class="fas fa-envelope me-2"></i> Email: info@elitmobilya.com</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="mt-4 mb-4 bg-light">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start">
+                    &copy; @DateTime.Now.Year Elit Mobilya - Tüm Hakları Saklıdır
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <img src="https://via.placeholder.com/50x30" alt="Payment Methods" class="me-2">
+                    <img src="https://via.placeholder.com/50x30" alt="Payment Methods" class="me-2">
+                    <img src="https://via.placeholder.com/50x30" alt="Payment Methods">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html> 

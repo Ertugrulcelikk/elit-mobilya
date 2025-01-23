@@ -1,0 +1,133 @@
+﻿@using web_final_projesi.Models.ViewModels
+@model HomeViewModel
+@{
+    ViewData["Title"] = "Elit Mobilya & Dekorasyon";
+}
+
+
+<div class="hero-section position-relative">
+    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="https://images.unsplash.com/photo-1631679706909-1844bbd07221?auto=format&fit=crop&w=1600&h=600" class="d-block w-100" alt="Modern Salon">
+                <div class="carousel-caption">
+                    <h1 class="display-4 fw-bold">Evinizin Hayalinizi Gerçekleştiriyoruz</h1>
+                    <p class="lead">Modern ve şık tasarımlarla yaşam alanlarınızı baştan yaratın</p>
+                    <div class="text-center">
+                        <a href="@Url.Action("TumUrunler", "Home")" class="btn btn-primary btn-lg">
+                            <i class="fas fa-shopping-bag me-2"></i> Ürünleri Keşfet
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <h2 class="text-center mb-5 fw-bold">Kategoriler</h2>
+    <div class="row g-4">
+        @foreach (var category in Model.Categories)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card category-card border-0 shadow-sm">
+                    <img src="@category.ImageUrl" class="card-img-top" alt="@category.Name"
+                         style="height: 300px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <h3 class="card-title h4">@category.Name</h3>
+                        <a href="@Url.Action("CategoryProducts", "Home", new { id = category.Id })" 
+                           class="btn btn-outline-primary">İncele</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="container py-5">
+    <h2 class="text-center mb-4">Öne Çıkan Ürünler</h2>
+    <div class="row g-4">
+        @foreach (var product in Model.FeaturedProducts)
+        {
+            <div class="col-md-4">
+                <div class="card product-card h-100 border-0 shadow-sm">
+                    <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name"
+                         style="height: 250px; object-fit: cover;">
+                    <div class="card-body">
+                        <span class="badge bg-primary mb-2">@product.Category?.Name</span>
+                        <h5 class="card-title">@product.Name</h5>
+                        <p class="card-text text-muted">@(product.Description?.Length > 100 ? product.Description.Substring(0, 100) + "..." : product.Description)</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span class="h5 text-primary mb-0">@product.Price.ToString("N2") TL</span>
+                            <button class="btn btn-primary add-to-cart" data-product-id="@product.Id">
+                                <i class="fas fa-shopping-cart"></i> Sepete Ekle
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="text-center">
+                <i class="fas fa-truck fs-1 text-primary mb-3"></i>
+                <h3 class="h5">Ücretsiz Teslimat</h3>
+                <p class="text-muted">Tüm Türkiye'ye ücretsiz teslimat</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="text-center">
+                <i class="fas fa-couch fs-1 text-primary mb-3"></i>
+                <h3 class="h5">Montaj Hizmeti</h3>
+                <p class="text-muted">Profesyonel montaj ekibi</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="text-center">
+                <i class="fas fa-headset fs-1 text-primary mb-3"></i>
+                <h3 class="h5">7/24 Destek</h3>
+                <p class="text-muted">Müşteri hizmetleri desteği</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.hero-section {
+    margin-top: -20px;
+}
+.carousel-item img {
+    object-fit: cover;
+    height: 600px;
+}
+.carousel-caption {
+    background: rgba(0,0,0,0.5);
+    padding: 2rem;
+    border-radius: 10px;
+}
+.category-card:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+}
+.product-card:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+}
+</style>
+
+@section Scripts {
+    <script>
+        $('.add-to-cart').click(function() {
+            var productId = $(this).data('product-id');
+            $.post('/Cart/AddToCart', { productId: productId }, function(response) {
+                if (response.success) {
+                    alert('Ürün sepete eklendi!');
+                }
+            });
+        });
+    </script>
+}
